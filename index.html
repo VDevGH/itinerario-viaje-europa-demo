@@ -1,0 +1,53 @@
+<!-- Panel resumen, progreso y diseño mejorado (demo) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itinerario Europa 2025 - Demo Mejorada</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
+    .summary-panel { background: linear-gradient(120deg,#1953a6 50%,#0ad3d6 100%); color:#fff; text-align:center; padding:2rem 1rem; box-shadow:0 3px 8px 0 #0002; }
+    .summary-numbers { font-size:1.45rem; display:flex; justify-content:space-around; margin:1rem 0 0.1rem 0; }
+    .progreso { display:flex;align-items:center;justify-content:center;gap:8px; margin:1rem auto 0.6rem auto; }
+    .progreso-bar { flex:1; background:#fff4; border-radius:10px; height:14px; overflow:hidden; }
+    .progreso-bar-inner { background:#ffb400; height:100%; width:60%; transition:width 1s; border-radius:10px; }
+    .summary-btns {display:flex;gap:16px;justify-content:center;margin-top:16px;}
+    .summary-btns button {background:#0ad3d6;color:#fff;padding:10px 18px;border-radius:30px;font-size:1rem;border:none;box-shadow:0 2px 5px 0 #0001;cursor:pointer;}
+    .ciudades-list {display:inline-block;font-weight:600;margin-top:8px;}
+    .dias-contador {font-size:1.5em;font-weight:700;letter-spacing:0.04em;}
+    @media(max-width:480px){.summary-panel{padding:1rem 0.3rem;} .summary-btns button{font-size:0.95rem;padding:8px 10px;} .dias-contador{font-size:1.1em;}}
+  </style>
+</head>
+<body>
+  <div class="summary-panel">
+    <div>
+      <span class="dias-contador" id="diasContador">Faltan 18 días para el viaje</span>
+    </div>
+    <div class="summary-numbers">
+      <span><strong id="totalCiudades">5</strong> ciudades</span>
+      <span><strong id="totalActividades">14</strong> actividades</span>
+      <span><strong id="totalDias">8</strong> días</span>
+    </div>
+    <div class="progreso">
+      <span>Progreso:</span>
+      <div class="progreso-bar"><div class="progreso-bar-inner" style="width:60%"></div></div>
+      <span id="porcentajeCompletado">60%</span>
+    </div>
+    <div class="ciudades-list">
+      🏙️ Bruselas, Gante, Brujas, Amberes, Ámsterdam
+    </div>
+    <div class="summary-btns">
+      <button onclick="window.print()">Exportar a PDF</button>
+      <button onclick="navigator.share ? navigator.share({title:'Mi Itinerario', url:location.href}) : window.open('https://wa.me/?text='+encodeURIComponent(location.href),'_blank');">Compartir</button>
+    </div>
+  </div>
+  <!-- Aquí iría el resto del itinerario y funcionalidades (demo) -->
+  <div style="padding:2rem;text-align:center;color:#222;">
+    <h2>Demo de mejoras visuales y funcionales en construcción</h2>
+    <p>Tu itinerario de viaje tendrá panel animado, barra de progreso de actividades, diseño responsive mejorado y compatibilidad móvil avanzada.</p>
+    <p>¡Aquí verás mapas, actividades optimizadas y muchas más funciones!</p>
+  </div>
+</body>
+</html>
