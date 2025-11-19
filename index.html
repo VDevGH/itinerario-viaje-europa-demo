@@ -1,53 +1,570 @@
-<!-- Panel resumen, progreso y diseño mejorado (demo) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Itinerario Europa 2025 - Demo Mejorada</title>
-  <link rel="stylesheet" href="estilos.css">
-  <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
-    .summary-panel { background: linear-gradient(120deg,#1953a6 50%,#0ad3d6 100%); color:#fff; text-align:center; padding:2rem 1rem; box-shadow:0 3px 8px 0 #0002; }
-    .summary-numbers { font-size:1.45rem; display:flex; justify-content:space-around; margin:1rem 0 0.1rem 0; }
-    .progreso { display:flex;align-items:center;justify-content:center;gap:8px; margin:1rem auto 0.6rem auto; }
-    .progreso-bar { flex:1; background:#fff4; border-radius:10px; height:14px; overflow:hidden; }
-    .progreso-bar-inner { background:#ffb400; height:100%; width:60%; transition:width 1s; border-radius:10px; }
-    .summary-btns {display:flex;gap:16px;justify-content:center;margin-top:16px;}
-    .summary-btns button {background:#0ad3d6;color:#fff;padding:10px 18px;border-radius:30px;font-size:1rem;border:none;box-shadow:0 2px 5px 0 #0001;cursor:pointer;}
-    .ciudades-list {display:inline-block;font-weight:600;margin-top:8px;}
-    .dias-contador {font-size:1.5em;font-weight:700;letter-spacing:0.04em;}
-    @media(max-width:480px){.summary-panel{padding:1rem 0.3rem;} .summary-btns button{font-size:0.95rem;padding:8px 10px;} .dias-contador{font-size:1.1em;}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍 Itinerario Europa 2025 | Bruselas → Ámsterdam</title>
+    <meta name="description" content="Viaje por Europa: Bruselas, Gante, Brujas, Amberes y Ámsterdam del 7 al 14 de diciembre 2025">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f1f5f9;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header y Panel de Resumen */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .countdown {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            height: 20px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            height: 100%;
+            border-radius: 50px;
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .cities-list {
+            margin-top: 1rem;
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--primary);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Barra de búsqueda y filtros */
+        .search-filter-bar {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem auto;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .chip:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Timeline de días */
+        .timeline {
+            margin: 2rem 0;
+        }
+
+        .day-card {
+            background: var(--white);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .day-header:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        .day-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .day-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .toggle-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .day-header.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .day-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .day-content.active {
+            max-height: 10000px;
+        }
+
+        .activities {
+            padding: 1rem;
+        }
+
+        .activity {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .activity:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .activity.completed {
+            opacity: 0.7;
+            border-left-color: var(--success);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .activity-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .activity-icon {
+            font-size: 1.5rem;
+        }
+
+        .activity-time {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .activity-description {
+            margin: 1rem 0;
+            color: #64748b;
+        }
+
+        .activity-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .detail-item {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+
+        .map-container {
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .map-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-map {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-map:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-map.secondary {
+            background: var(--success);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .countdown {
+                font-size: 1.2rem;
+            }
+
+            .stats {
+                gap: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .activity {
+                padding: 1rem;
+            }
+
+            .map-container {
+                height: 250px;
+            }
+
+            .btn-map {
+                font-size: 0.875rem;
+                min-width: 120px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--white);
+            margin-top: 3rem;
+        }
+    </style>
 </head>
 <body>
-  <div class="summary-panel">
-    <div>
-      <span class="dias-contador" id="diasContador">Faltan 18 días para el viaje</span>
+    <div class="header">
+        <div class="container">
+            <h1>🌍 Viaje por Europa 2025</h1>
+            <div class="countdown" id="countdown">Cargando...</div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number" id="totalDays">8</span>
+                    <span class="stat-label">Días</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="totalCities">5</span>
+                    <span class="stat-label">Ciudades</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="totalActivities">0</span>
+                    <span class="stat-label">Actividades</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="completedActivities">0</span>
+                    <span class="stat-label">Completadas</span>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div>Progreso del viaje</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%">
+                        <span id="progressPercent">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cities-list">
+                📍 Bruselas → Gante → Brujas → Amberes → Ámsterdam
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="exportToPDF()">
+                    📄 Exportar PDF
+                </button>
+                <button class="btn btn-secondary" onclick="shareItinerary()">
+                    🔗 Compartir
+                </button>
+                <button class="btn btn-secondary" onclick="resetProgress()">
+                    🔄 Reiniciar progreso
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="summary-numbers">
-      <span><strong id="totalCiudades">5</strong> ciudades</span>
-      <span><strong id="totalActividades">14</strong> actividades</span>
-      <span><strong id="totalDias">8</strong> días</span>
+
+    <div class="container">
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Buscar actividades...">
+            </div>
+            <div class="filter-chips">
+                <div class="chip active" data-filter="all">Todas</div>
+                <div class="chip" data-filter="transport">✈️ Transporte</div>
+                <div class="chip" data-filter="food">🍽️ Comida</div>
+                <div class="chip" data-filter="culture">🏛️ Cultura</div>
+                <div class="chip" data-filter="hotel">🏨 Alojamiento</div>
+            </div>
+        </div>
+
+        <div class="timeline" id="timeline">
+            <!-- El contenido se generará dinámicamente con JavaScript -->
+        </div>
     </div>
-    <div class="progreso">
-      <span>Progreso:</span>
-      <div class="progreso-bar"><div class="progreso-bar-inner" style="width:60%"></div></div>
-      <span id="porcentajeCompletado">60%</span>
+
+    <div class="footer">
+        <p>✨ Viaje por Europa 2025 | Del 7 al 14 de diciembre</p>
+        <p>Hecho con ❤️ para una aventura inolvidable</p>
     </div>
-    <div class="ciudades-list">
-      🏙️ Bruselas, Gante, Brujas, Amberes, Ámsterdam
-    </div>
-    <div class="summary-btns">
-      <button onclick="window.print()">Exportar a PDF</button>
-      <button onclick="navigator.share ? navigator.share({title:'Mi Itinerario', url:location.href}) : window.open('https://wa.me/?text='+encodeURIComponent(location.href),'_blank');">Compartir</button>
-    </div>
-  </div>
-  <!-- Aquí iría el resto del itinerario y funcionalidades (demo) -->
-  <div style="padding:2rem;text-align:center;color:#222;">
-    <h2>Demo de mejoras visuales y funcionales en construcción</h2>
-    <p>Tu itinerario de viaje tendrá panel animado, barra de progreso de actividades, diseño responsive mejorado y compatibilidad móvil avanzada.</p>
-    <p>¡Aquí verás mapas, actividades optimizadas y muchas más funciones!</p>
-  </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
